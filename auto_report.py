@@ -1,3 +1,14 @@
+'''
+C:\Users\J1121857\OneDrive - TotalEnergies\Desktop>pip install openpyxl
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x000001DAD9F5CF20>, 'Connection to pypi.org timed out. (connect timeout=15)')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x000001DADD6E2750>, 'Connection to pypi.org timed out. (connect timeout=15)')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x000001DADD7AF8F0>, 'Connection to pypi.org timed out. (connect timeout=15)')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x000001DADD7AFB00>, 'Connection to pypi.org timed out. (connect timeout=15)')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x000001DADD7AFD10>, 'Connection to pypi.org timed out. (connect timeout=15)')': /simple/openpyxl/
+ERROR: Could not find a version that satisfies the requirement openpyxl (from versions: none)
+ERROR: No matching distribution found for openpyxl
+'''
+
 # from openpyxl import Workbook, load_workbook
 
 
