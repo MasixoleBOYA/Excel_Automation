@@ -1,23 +1,23 @@
 from openpyxl import Workbook, load_workbook
 
 
-work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx') # Give path, unless in same dir 
-# ws = wb.active
+work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx') 
+product_codes_workbook = load_workbook('path_to_product_codes_workbook.xlsx')  # Replace with the actual path
+customer_codes_workbook = load_workbook('path_to_customer_codes_workbook.xlsx')  # Replace with the actual path
 
-# print(wb.sheetnames)
 
 depots = ["Alrode",
           "Bethlehem",
           "Cape Town",
           "East London",
-          #"Island View",
+          "Island View",
           "Klerksdorp",
           "Ladysmith",
           "Mossel Bay",
           "Nelspruit",
           "Port Elizabeth",
           "Sasolburg",
-          #"Tarlton",
+          "Tarlton",
           "Waltloo",
           "Witbank"]
 
@@ -69,8 +69,50 @@ def appending_to_onesheet(sheetName: str) -> None:
                                                      values_only = True):
             appending_sheet.append(row)
 
-print(work_book.sheetnames)
-sheet_rename()
-appending_to_onesheet("Alrode")
-work_book.save('C:/Users/J1121857/Downloads/TEST_NEW_NEW.xlsx')
+
+# XXXXXXXXXXXXXXXXXXXXX proposed using openpyxl XXXXXXXXXXXXXXXXXXXXX
+            
+# PART 3: Add "Customer Names" column to Alrode sheet
+def add_customer_names_column():
+    alrode_sheet = work_book["Alrode"]
+    customer_codes_sheet = customer_codes_workbook.active
+
+    # Insert a new column after the "Customer Codes" column
+    alrode_sheet.insert_cols(3)
+
+    # Iterate through rows in the Alrode sheet
+    for row in alrode_sheet.iter_rows(min_row=2, max_row=alrode_sheet.max_row, min_col=3, max_col=3):
+        for cell in row:
+            customer_code = cell.value
+            if customer_code is not None:
+                # Find the corresponding customer name in the customer codes workbook
+                customer_name = customer_codes_sheet[f'B{customer_code}'].value
+                # Insert the customer name in the new column
+                alrode_sheet.cell(row=cell.row, column=cell.column + 1, value=customer_name)
+
+# PART 4: Add "Product Names" column to Alrode sheet
+def add_product_names_column():
+    alrode_sheet = work_book["Alrode"]
+    product_codes_sheet = product_codes_workbook.active
+
+    # Insert a new column after the "Product" column
+    alrode_sheet.insert_cols(5)
+
+    # Iterate through rows in the Alrode sheet
+    for row in alrode_sheet.iter_rows(min_row=2, max_row=alrode_sheet.max_row, min_col=5, max_col=5):
+        for cell in row:
+            product_code = cell.value
+            if product_code is not None:
+                # Find the corresponding product name in the product codes workbook
+                product_name = product_codes_sheet[f'B{product_code}'].value
+                # Insert the product name in the new column
+                alrode_sheet.cell(row=cell.row, column=cell.column + 1, value=product_name)
+
+
+if __name__ == "__main__":
+
+    print(work_book.sheetnames)
+    sheet_rename()
+    appending_to_onesheet("Alrode")
+    work_book.save('C:/Users/J1121857/Downloads/TEST_NEW_NEW.xlsx')
           
