@@ -2,8 +2,8 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
-product_codes_workbook = pd.read_excel('path_to_product_codes_workbook.xlsx')  # Replace with the actual path
-customer_codes_workbook = pd.read_excel('path_to_customer_codes_workbook.xlsx')  # Replace with the actual path
+product_codes_workbook = pd.read_excel('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX', sheet_name='Product Code')  # Replace with the actual path
+customer_codes_workbook = pd.read_excel('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
 
 depots = ["Alrode", "Bethlehem", "Cape Town", "East London", "Island View", "Klerksdorp", "Ladysmith", "Mossel Bay",
           "Nelspruit", "Port Elizabeth", "Sasolburg", "Tarlton", "Waltloo", "Witbank"]
@@ -22,7 +22,7 @@ def sheet_rename() -> None:
 def appending_to_onesheet(sheet_name: str) -> None:
     appending_sheet = work_book[sheet_name]
 
-    for depot_name in depots[1:]:
+    for depot_name in work_book.sheetnames[1:]:
         current_worksheet = work_book[depot_name]
         for row in current_worksheet.iter_rows(min_row=2, max_row=current_worksheet.max_row, values_only=True):
             appending_sheet.append(row)
@@ -31,16 +31,14 @@ def appending_to_onesheet(sheet_name: str) -> None:
 def add_customer_names_column():
     alrode_sheet = work_book["Alrode"]
 
-    # Convert the Alrode sheet to a pandas DataFrame
     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
 
-    # Lookup customer names based on the "Customer Codes" column
-    alrode_df["Customer Names"] = alrode_df["Customer Codes"].map(customer_codes_workbook.set_index("Code")["Customer Name"])
+    #Look for customer names based on the "Customer Codes" column
+    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook.set_index("Customer No")["Customer Name"])
 
-    # Replace NaN values with an empty string (or any other desired value)
     alrode_df["Customer Names"].fillna("", inplace=True)
 
-    # Update the Alrode sheet with the new column
+    #Update the Alrode sheet, considering the new column
     alrode_sheet.clear()
     alrode_sheet.append(list(alrode_df.columns))
     for row in alrode_df.values:
@@ -50,29 +48,24 @@ def add_customer_names_column():
 def add_product_names_column():
     alrode_sheet = work_book["Alrode"]
 
-    # Convert the Alrode sheet to a pandas DataFrame
     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
 
-    # Lookup product names based on the "Product" column
-    alrode_df["Product Names"] = alrode_df["Product"].map(product_codes_workbook.set_index("Code")["Product Name"])
+    # Looking up for product names based on the "Product" column
+    alrode_df["Product Names"] = alrode_df["Product"].map(product_codes_workbook.set_index("Product code")["Product name"])
 
-    # Replace NaN values with an empty string (or any other desired value)
     alrode_df["Product Names"].fillna("", inplace=True)
 
-    # Update the Alrode sheet with the new column
+    # Update the Alrode sheet 
     alrode_sheet.clear()
     alrode_sheet.append(list(alrode_df.columns))
     for row in alrode_df.values:
         alrode_sheet.append(list(row))
 
-# Print sheet names, rename columns, and append data
-print(work_book.sheetnames)
+print(f"\nWORKBOOK sheetnames:\n{work_book.sheetnames}")
 sheet_rename()
 appending_to_onesheet("Alrode")
 
-# Add "Customer Names" column and "Product Names" column to Alrode sheet
 add_customer_names_column()
 add_product_names_column()
 
-# Save the modified workbook to a new file
-work_book.save('C:/Users/J1121857/Downloads/TEST_NEW_NEW.xlsx')
+work_book.save('C:/Users/J1121857/Downloads/AAAAAAAAAAAA.xlsx')
