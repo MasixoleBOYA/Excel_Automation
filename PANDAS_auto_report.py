@@ -41,51 +41,15 @@ def add_customer_names_column():
     customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
     customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()] )
 
-    #Look for customer names based on the "Customer Codes" column
-    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df.set_index('Customer No')["Customer Name"])
-    '''
-    AttributeError: 'Workbook' object has no attribute 'set_index'. Did you mean: 'get_index'?
-PS C:\Users\J1121857> & C:/Users/J1121857/AppData/Local/Programs/Python/Python312/python.exe c:/Users/J1121857/Downloads/PANDAS_auto_report.py
+    # Set 'Customer No' column as index
+    customer_codes_workbook_df.set_index('Customer No', inplace=True)
 
-MAIN WORKBOOK sheetnames:
-['Alrode', 'Bethlehem', 'Cape Town', 'East London', 'Island View ', 'Klerksdorp', 'Ladysmith', 'Mossel Bay', 'Nelspruit', 'Port 
-Elizabeth', 'Sasolburg', 'Tarlton ', 'Waltloo', 'Witbank']
-
-PRODUCT workbook sheetnames:
-['sold to and ship to', 'Active credit accounts', 'Sold to', 'SAP shortcuts', 'Product Code']
-
-CUSTOMER CODES worksheet sheetnames:
-['Depots', 'Sheet2', 'Recoveries', 'Channel', 'Primary Tpt', 'Depot Cost', 'Cust Loc (3)', 'Cust Loc (2)', 'Customer Info (2)', 
-'Customer Info', 'Cust Loc', 'Sheet1']
-
-WORKBOOK sheetnames:
-['Alrode', 'Bethlehem', 'Cape Town', 'East London', 'Island View ', 'Klerksdorp', 'Ladysmith', 'Mossel Bay', 'Nelspruit', 'Port 
-Elizabeth', 'Sasolburg', 'Tarlton ', 'Waltloo', 'Witbank']
-Traceback (most recent call last):
-  File "c:\Users\J1121857\Downloads\PANDAS_auto_report.py", line 77, in <module>
-    add_customer_names_column()
-  File "c:\Users\J1121857\Downloads\PANDAS_auto_report.py", line 45, in add_customer_names_column
-    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df.set_index('Customer No')["Customer Name"])
-                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\series.py", line 4691, in map   
-    new_values = self._map_values(arg, na_action=na_action)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\base.py", line 921, in _map_values
-    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\algorithms.py", line 1732, in map_array
-    indexer = mapper.index.get_indexer(arr)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\indexes\base.py", line 3885, in 
-get_indexer
-    raise InvalidIndexError(self._requires_unique_msg)
-pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
-PS C:\Users\J1121857> 
-    '''
+    # Look for customer names based on the "Customer Codes" column
+    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
 
     alrode_df["Customer Names"].fillna("", inplace=True)
 
-    #Update the Alrode sheet, considering the new column
+    # Update the Alrode sheet, considering the new column
     alrode_sheet.clear()
     alrode_sheet.append(list(alrode_df.columns))
     for row in alrode_df.values:
