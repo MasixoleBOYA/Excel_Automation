@@ -26,12 +26,6 @@ work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
 customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
 
-print(f"\nMAIN WORKBOOK sheetnames:\n{work_book.sheetnames}")
-print(f"\nPRODUCT workbook sheetnames:\n{product_codes_workbook.sheetnames}")
-print(f"\nCUSTOMER CODES worksheet sheetnames:\n{customer_codes_workbook.sheetnames}")
-
-
-
 depots = ["Alrode", "Bethlehem", "Cape Town", "East London", "Island View", "Klerksdorp", "Ladysmith", "Mossel Bay",
           "Nelspruit", "Port Elizabeth", "Sasolburg", "Tarlton", "Waltloo", "Witbank"]
 
@@ -63,8 +57,6 @@ def add_customer_names_column():
 
     # Convert 'Customer No.' column to numeric, coercing non-numeric values to NaN
     alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."], errors='coerce')
-
-    print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Customer No.'])}\n")
     
     # Drop rows with NaN values in 'Customer No.' column
     alrode_df.dropna(subset=['Customer No.'], inplace=True)
@@ -74,6 +66,7 @@ def add_customer_names_column():
 
     customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
     customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
+    print(f""\n CUSTOMER CODES DATAFRAME: {customer_codes_workbook_df}\n")
 
     # Set 'Customer No' column as index
     customer_codes_workbook_df.set_index('Customer No', inplace=True)
