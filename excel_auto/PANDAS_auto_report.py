@@ -54,16 +54,23 @@ def appending_to_onesheet(sheet_name: str) -> None:
 
 # PART 3: Add "Customer Names" column to Alrode sheet using pandas
 def add_customer_names_column():
-    
     alrode_sheet = work_book["Alrode"]
 
     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
-    
-    alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."])
 
-    print(f"\nXXXX TYPES XXXXX: {type(alrode_df["Customer No."])}\n")
+    # Convert 'Customer No.' column to numeric, coercing non-numeric values to NaN
+    alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."], errors='coerce')
+
+    print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Customer No.'])}\n")
+    
+    # Drop rows with NaN values in 'Customer No.' column
+    alrode_df.dropna(subset=['Customer No.'], inplace=True)
+
+    # Convert 'Customer No.' column to integers
+    alrode_df['Customer No.'] = alrode_df['Customer No.'].astype(int)
+
     customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
-    customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()] )
+    customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
 
     # Set 'Customer No' column as index
     customer_codes_workbook_df.set_index('Customer No', inplace=True)
