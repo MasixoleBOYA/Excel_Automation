@@ -1,11 +1,26 @@
 import pandas as pd
 from openpyxl import Workbook, load_workbook
 
-"""
+'''
+CUSTOMER CODES DATAFRAME:       Customer No       Customer Name  Cash/Term
+0     Customer No       Customer Name  Cash/Term
+1          242797  EAGLE DISTRIBUTORS      Terms
+2          244245  EAGLE DISTRIBUTORS      Terms
+3          244288  EAGLE DISTRIBUTORS      Terms
+4          244613     QUEST PETROLEUM       Cash
+...           ...                 ...        ...
+1142       564097           INYAMEKO        Cash
+1143       564419      TRANSFRONTIER        Cash
+1144       564420      TRANSFRONTIER        Cash
+1145       299394         AFRICA FUEL      Terms
+1146       553393      CIEN HOLDINGS        Cash
+
+[1147 rows x 3 columns]
+
 Traceback (most recent call last):
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 93, in <module>
+  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 87, in <module>
     add_customer_names_column()
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 61, in add_customer_names_column
+  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 55, in add_customer_names_column
     alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\series.py", line 4691, in map
@@ -20,7 +35,9 @@ Traceback (most recent call last):
   File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\indexes\base.py", line 3885, in get_indexer
     raise InvalidIndexError(self._requires_unique_msg)
 pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
-"""
+PS C:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos> 
+'''
+
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
@@ -66,7 +83,7 @@ def add_customer_names_column():
 
     customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
     customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
-    print(f""\n CUSTOMER CODES DATAFRAME: {customer_codes_workbook_df}\n")
+    print(f"\n CUSTOMER CODES DATAFRAME: {customer_codes_workbook_df}\n")
 
     # Set 'Customer No' column as index
     customer_codes_workbook_df.set_index('Customer No', inplace=True)
