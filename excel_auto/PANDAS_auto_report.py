@@ -74,6 +74,8 @@ def add_customer_names_column():
 
     # Convert 'Customer No.' column to numeric, coercing non-numeric values to NaN
     alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."], errors='coerce')
+
+    print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Customer No.'])}\n")
     
     # Drop rows with NaN values in 'Customer No.' column
     alrode_df.dropna(subset=['Customer No.'], inplace=True)
@@ -83,10 +85,16 @@ def add_customer_names_column():
 
     customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
     customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
-    print(f"\n CUSTOMER CODES DATAFRAME: {customer_codes_workbook_df}\n")
 
-    # Set 'Customer No' column as index
+    # Set 'Customer No' column as index and identify duplicates
     customer_codes_workbook_df.set_index('Customer No', inplace=True)
+    duplicates = customer_codes_workbook_df[customer_codes_workbook_df.index.duplicated(keep=False)]
+    if not duplicates.empty:
+        print("Duplicate Customer No:")
+        print(duplicates)
+
+    # Drop duplicate indices while keeping the first occurrence
+    customer_codes_workbook_df = customer_codes_workbook_df[~customer_codes_workbook_df.index.duplicated(keep='first')]
 
     # Look for customer names based on the "Customer Codes" column
     alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
