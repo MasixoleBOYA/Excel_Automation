@@ -2,43 +2,22 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 
 '''
-CUSTOMER CODES DATAFRAME:       Customer No       Customer Name  Cash/Term
-0     Customer No       Customer Name  Cash/Term
-1          242797  EAGLE DISTRIBUTORS      Terms
-2          244245  EAGLE DISTRIBUTORS      Terms
-3          244288  EAGLE DISTRIBUTORS      Terms
-4          244613     QUEST PETROLEUM       Cash
-...           ...                 ...        ...
-1142       564097           INYAMEKO        Cash
-1143       564419      TRANSFRONTIER        Cash
-1144       564420      TRANSFRONTIER        Cash
-1145       299394         AFRICA FUEL      Terms
-1146       553393      CIEN HOLDINGS        Cash
+c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py:66: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
 
-[1147 rows x 3 columns]
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
 
+
+  alrode_df["Customer Names"].fillna("", inplace=True)
 Traceback (most recent call last):
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 87, in <module>
+  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 96, in <module>
     add_customer_names_column()
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 55, in add_customer_names_column
-    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
-                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\series.py", line 4691, in map
-    new_values = self._map_values(arg, na_action=na_action)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\base.py", line 921, in _map_values
-    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\algorithms.py", line 1732, in map_array
-    indexer = mapper.index.get_indexer(arr)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\J1121857\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\indexes\base.py", line 3885, in get_indexer
-    raise InvalidIndexError(self._requires_unique_msg)
-pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
+  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 69, in add_customer_names_column
+    alrode_sheet.clear()
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'Worksheet' object has no attribute 'clear'
 PS C:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos> 
 '''
-
-
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
 customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
