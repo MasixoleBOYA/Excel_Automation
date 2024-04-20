@@ -1,23 +1,7 @@
 import pandas as pd
 from openpyxl import Workbook, load_workbook
 
-'''
-c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py:66: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
-The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
 
-For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
-
-
-  alrode_df["Customer Names"].fillna("", inplace=True)
-Traceback (most recent call last):
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 96, in <module>
-    add_customer_names_column()
-  File "c:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos\excel_auto\PANDAS_auto_report.py", line 69, in add_customer_names_column
-    alrode_sheet.clear()
-    ^^^^^^^^^^^^^^^^^^
-AttributeError: 'Worksheet' object has no attribute 'clear'
-PS C:\Users\J1121857\OneDrive - TotalEnergies\Desktop\Git_Repos> 
-'''
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
 customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
@@ -78,13 +62,20 @@ def add_customer_names_column():
     # Look for customer names based on the "Customer Codes" column
     alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
 
+    # Fill NaN values in "Customer Names" column with empty string
     alrode_df["Customer Names"].fillna("", inplace=True)
 
-    # Update the Alrode sheet, considering the new column
-    alrode_sheet.clear()
-    alrode_sheet.append(list(alrode_df.columns))
-    for row in alrode_df.values:
-        alrode_sheet.append(list(row))
+    # Clear the contents of the worksheet
+    for row in alrode_sheet.iter_rows():
+        for cell in row:
+            cell.value = None
+
+    # Update the Alrode sheet with the new data
+    for index, row in alrode_df.iterrows():
+        alrode_sheet.append(row)
+
+    # Save the workbook
+    work_book.save('C:/Users/J1121857/Downloads/AAAAAAAAAAAA.xlsx')
 
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
 def add_product_names_column():
