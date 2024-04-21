@@ -2,6 +2,7 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 
 from customer_codes_data import customer_codesNames_dictionary
+from product_codes_data import product_codes_dictionary
 
 
 
@@ -134,6 +135,6 @@ appending_to_onesheet("Alrode")
 add_customer_names_column()
 add_product_names_column()
 
-
+print("cccccccccc DONE cccccccccccc")
 
 work_book.save('C:/Users/J1121857/Downloads/AAAAAAAAAAAA.xlsx')
