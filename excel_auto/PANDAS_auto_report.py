@@ -1,10 +1,103 @@
 import pandas as pd
 from openpyxl import Workbook, load_workbook
 
+from customer_codes_data import customer_codesNames_dictionary
+'''
+CUSTOMER CODES DICTIONARY
+
+242797: EAGLE DISTRIBUTORS
+244245: EAGLE DISTRIBUTORS
+244288: EAGLE DISTRIBUTORS
+244613: QUEST PETROLEUM
+244614: QUEST PETROLEUM
+244618: QUEST PETROLEUM
+244622: QUEST PETROLEUM
+244624: QUEST PETROLEUM
+244639: GULFSTREAM
+244641: GULFSTREAM
+244642: GULFSTREAM
+244643: GULFSTREAM
+244645: GULFSTREAM
+244648: GULFSTREAM
+244649: GULFSTREAM
+244650: GULFSTREAM
+244652: GULFSTREAM
+244653: GULFSTREAM
+244654: GULFSTREAM
+245065: QUANTUM ENERGY
+245066: QUANTUM ENERGY
+245127: QUEST PETROLEUM
+245366: DHODA DIESELS
+245371: DHODA DIESELS
+245380: MAKWANDE ENERGY
+245480: QUANTUM ENERGY
+245910: MAKWANDE ENERGY
+245922: NKOMAZI FUEL
+251654: VRYPET
+254017: VALSAR PETROLEUM
+271547: NAMERC CONSULTING
+281326: VRYPET
+284368: FORCE FUEL
+287369: ELEGANT FUEL
+288430: NAMERC CONSULTING
+290625: GULFSTREAM
+290626: GULFSTREAM
+290627: GULFSTREAM
+290628: GULFSTREAM
+290629: GULFSTREAM
+291319: BLACK KNIGHT OIL
+291320: BLACK KNIGHT OIL
+291379: GLOBAL OIL
+291382: BLACK KNIGHT OIL
+291508: GLOBAL OIL
+291833: BLACK KNIGHT OIL
+292167: BLACK KNIGHT OIL
+292622: BF FUELS
+292808: ELEGANT FUEL
+292809: ELEGANT FUEL
+293513: NAMERC CONSULTING
+294872: GLOBAL OIL
+295335: AFRICOIL
+297043: ROYALE ENERGY
+297828: FORCE FUEL
+299150: GT OIL & FUEL
+299152: GT OIL & FUEL
+299260: WBG
+299394: AFRICA FUEL
+299437: AFRICA FUEL
+299486: SELATI PETROLEUM
+299653: SELATI PETROLEUM
+500526: ELEGANT FUEL
+500918: WBG
+500966: N1 PETROLEUM
+500968: N1 PETROLEUM
+500969: N1 PETROLEUM
+501677: ECHO PETROLEUM
+501810: GULFSTREAM
+501811: GULFSTREAM
+501812: GULFSTREAM
+501928: ROYALE ENERGY
+502564: GULFSTREAM
+502569: GULFSTREAM
+502572: GULFSTREAM
+502687: GULFSTREAM
+503463: NICSHA PETROLEUM
+503464: NICSHA PETROLEUM
+503468: NICSHA PETROLEUM
+503469: NICSHA PETROLEUM
+503470: NICSHA PETROLEUM
+503475: NICSHA PETROLEUM
+504091: GLOBAL OIL
+504188: ELEGANT FUEL
+504193: VOSFUELS
+504200: VOSFUELS
+504704: VRYHEID PETROLEUM
+505570: BOVUA ENERGY
+'''
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
-customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
+# customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
 
 depots = ["Alrode", "Bethlehem", "Cape Town", "East London", "Island View", "Klerksdorp", "Ladysmith", "Mossel Bay",
           "Nelspruit", "Port Elizabeth", "Sasolburg", "Tarlton", "Waltloo", "Witbank"]
@@ -46,33 +139,40 @@ def add_customer_names_column():
     # Convert 'Customer No.' column to integers
     alrode_df['Customer No.'] = alrode_df['Customer No.'].astype(int)
 
-    customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
-    customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
+    for i in alrode_df['Customer No.']:
+        for j in customer_codesNames_dictionary:
+            if i == j:
+                alrode_df['Customer Names'] = customer_codesNames_dictionary[j]
+    
+    print(f"NEW CUSTOMER NAMES COLUMN: \n {alrode_df['Customer Names']}")
+
+    # customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
+    # customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
 
     # Set 'Customer No' column as index and identify duplicates
-    customer_codes_workbook_df.set_index('Customer No', inplace=True)
-    duplicates = customer_codes_workbook_df[customer_codes_workbook_df.index.duplicated(keep=False)]
-    if not duplicates.empty:
-        print("Duplicate Customer No:")
-        print(duplicates)
+    # customer_codes_workbook_df.set_index('Customer No', inplace=True)
+    # duplicates = customer_codes_workbook_df[customer_codes_workbook_df.index.duplicated(keep=False)]
+    # if not duplicates.empty:
+    #     print("Duplicate Customer No:")
+    #     print(duplicates)
 
-    # Drop duplicate indices while keeping the first occurrence
-    customer_codes_workbook_df = customer_codes_workbook_df[~customer_codes_workbook_df.index.duplicated(keep='first')]
+    # # Drop duplicate indices while keeping the first occurrence
+    # customer_codes_workbook_df = customer_codes_workbook_df[~customer_codes_workbook_df.index.duplicated(keep='first')]
 
-    # Look for customer names based on the "Customer Codes" column
-    alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
+    # # Look for customer names based on the "Customer Codes" column
+    # alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
 
-    # Fill NaN values in "Customer Names" column with empty string
-    alrode_df["Customer Names"].fillna("", inplace=True)
+    # # Fill NaN values in "Customer Names" column with empty string
+    # alrode_df["Customer Names"].fillna("", inplace=True)
 
-    # Clear the contents of the worksheet
-    for row in alrode_sheet.iter_rows():
-        for cell in row:
-            cell.value = None
+    # # Clear the contents of the worksheet
+    # for row in alrode_sheet.iter_rows():
+    #     for cell in row:
+    #         cell.value = None
 
-    # Update the Alrode sheet with the new data
-    for index, row in alrode_df.iterrows():
-        alrode_sheet.append(row)
+    # # Update the Alrode sheet with the new data
+    # for index, row in alrode_df.iterrows():
+    #     alrode_sheet.append(row)
 
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
 def add_product_names_column():
