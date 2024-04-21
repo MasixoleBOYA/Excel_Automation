@@ -3,6 +3,22 @@ from openpyxl import Workbook, load_workbook
 
 from customer_codes_data import customer_codesNames_dictionary
 
+'''
+product_codes_dictionary = {
+	23119: 'Additised ULP93',	
+    23130:'Excellium Unleaded 95',	
+    23131:	'Excellium Diesel 50',	
+    22735:'ULP 93',	
+    22736:'ULP 95',	
+    22738:'LRP 93',	
+    22750:'LRP 95',	
+    22753:'D50',
+    22754:'D500',	
+    30682:'HFO 150CST',	
+    30687:'Light Cycle Oil'
+
+}
+'''
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
