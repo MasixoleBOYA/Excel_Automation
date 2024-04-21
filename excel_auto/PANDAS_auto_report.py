@@ -139,40 +139,34 @@ def add_customer_names_column():
     # Convert 'Customer No.' column to integers
     alrode_df['Customer No.'] = alrode_df['Customer No.'].astype(int)
 
-    for i in alrode_df['Customer No.']:
-        for j in customer_codesNames_dictionary:
-            if i == j:
-                alrode_df['Customer Names'] = customer_codesNames_dictionary[j]
+    # Initialize an empty list to store customer names
+    customer_names = []
+
+    # Iterate over the rows of the DataFrame
+    for index, row in alrode_df.iterrows():
+        # Get the customer number from the current row
+        customer_no = row['Customer No.']
+        
+        # Initialize a variable to store the customer name
+        customer_name = ""
+        
+        # Iterate over the items in the dictionary
+        for key, value in customer_codesNames_dictionary.items():
+            # Check if the current key matches the customer number
+            if key == customer_no:
+                # Assign the corresponding customer name
+                customer_name = value
+                # Exit the loop since we found the matching customer name
+                break
+        
+        # Append the customer name to the list
+        customer_names.append(customer_name)
+    
+    # Add the list of customer names as a new column in the DataFrame
+    alrode_df['Customer Names'] = customer_names
     
     print(f"NEW CUSTOMER NAMES COLUMN: \n {alrode_df['Customer Names']}")
 
-    # customer_codes_workbook_sheet = customer_codes_workbook["Cust Loc (3)"]
-    # customer_codes_workbook_df = pd.DataFrame(customer_codes_workbook_sheet.values, columns=[col[0].value for col in customer_codes_workbook_sheet.iter_cols()])
-
-    # Set 'Customer No' column as index and identify duplicates
-    # customer_codes_workbook_df.set_index('Customer No', inplace=True)
-    # duplicates = customer_codes_workbook_df[customer_codes_workbook_df.index.duplicated(keep=False)]
-    # if not duplicates.empty:
-    #     print("Duplicate Customer No:")
-    #     print(duplicates)
-
-    # # Drop duplicate indices while keeping the first occurrence
-    # customer_codes_workbook_df = customer_codes_workbook_df[~customer_codes_workbook_df.index.duplicated(keep='first')]
-
-    # # Look for customer names based on the "Customer Codes" column
-    # alrode_df["Customer Names"] = alrode_df["Customer No."].map(customer_codes_workbook_df["Customer Name"])
-
-    # # Fill NaN values in "Customer Names" column with empty string
-    # alrode_df["Customer Names"].fillna("", inplace=True)
-
-    # # Clear the contents of the worksheet
-    # for row in alrode_sheet.iter_rows():
-    #     for cell in row:
-    #         cell.value = None
-
-    # # Update the Alrode sheet with the new data
-    # for index, row in alrode_df.iterrows():
-    #     alrode_sheet.append(row)
 
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
 def add_product_names_column():
