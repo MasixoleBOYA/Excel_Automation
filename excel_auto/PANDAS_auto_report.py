@@ -34,100 +34,6 @@ def appending_to_onesheet(sheet_name: str) -> None:
         for row in current_worksheet.iter_rows(min_row=2, max_row=current_worksheet.max_row, values_only=True):
             appending_sheet.append(row)
 
-# # PART 3: Add "Customer Names" column to Alrode sheet using pandas
-# def add_customer_names_column():
-#     alrode_sheet = work_book["Alrode"]
-
-#     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
-
-#     # Convert 'Customer No.' column to numeric, coercing non-numeric values to NaN
-#     alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."], errors='coerce')
-
-#     print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Customer No.'])}\n")
-    
-#     # Drop rows with NaN values in 'Customer No.' column
-#     alrode_df.dropna(subset=['Customer No.'], inplace=True)
-
-#     # Convert 'Customer No.' column to integers
-#     alrode_df['Customer No.'] = alrode_df['Customer No.'].astype(int)
-
-#     # Initialize an empty list to store customer names
-#     customer_names = []
-
-#     # Iterate over the rows of the DataFrame
-#     for index, row in alrode_df.iterrows():
-#         # Get the customer number from the current row
-#         customer_no = row['Customer No.']
-        
-#         # Initialize a variable to store the customer name
-#         customer_name = None  # Change empty string to None
-        
-#         # Iterate over the items in the dictionary
-#         for key, value in customer_codesNames_dictionary.items():
-#             # Check if the current key matches the customer number
-#             if key == customer_no:
-#                 # Assign the corresponding customer name
-#                 customer_name = value
-#                 # Print the customer name for verification
-#                 print(f"Customer No. {customer_no} - Customer Name: {customer_name}")
-#                 # Exit the loop since we found the matching customer name
-#                 break
-        
-#         # Append the customer name to the list
-#         customer_names.append(customer_name)
-
-#     print(f"CUSTOMERS : {customer_names}")
-#     # Add the list of customer names as a new column in the DataFrame
-#     alrode_df['Customer Names'] = customer_names
-    
-#     print(f"NEW CUSTOMER NAMES COLUMN: \n {alrode_df['Customer Names']}")
-
-
-
-# # PART 4: Add "Product Names" column to Alrode sheet using pandas
-# def add_product_names_column():
-#     alrode_sheet = work_book["Alrode"]
-    
-#     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
-
-#     # Convert 'Product' column to numeric, coercing non-numeric values to NaN
-#     alrode_df['Product'] = pd.to_numeric(alrode_df["Product"], errors='coerce')
-
-#     print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Product'])}\n")
-
-#     # Drop rows with NaN values in 'Product' column
-#     alrode_df.dropna(subset=['Product'], inplace=True)
-
-#     # Convert 'Product' column to integers
-#     alrode_df['Product'] = alrode_df['Product'].astype(int)
-
-#     # Initialize an empty list to store product names
-#     product_names = []
-
-#     # Iterate over the rows of the DataFrame
-#     for index, row in alrode_df.iterrows():
-#         # Get the product code from the current row
-#         product_code = row['Product']
-        
-#         # Initialize a variable to store the product name
-#         product_name = None
-        
-#         # Look up the product name in the dictionary
-#         product_name = product_codes_dictionary.get(product_code)
-        
-#         # Append the product name to the list
-#         product_names.append(product_name)
-
-#     print(f"PRODUCTS : {product_names}")
-#     # Add the list of product names as a new column in the DataFrame
-#     alrode_df['Product Names'] = product_names
-    
-#     print(f"NEW PRODUCT NAMES COLUMN: \n {alrode_df['Product Names']}")
-
-#     # Append the updated DataFrame to the Alrode sheet 
-#     for row in alrode_df.values:
-#         alrode_sheet.append(list(row))
-
 # PART 3: Add "Customer Names" column to Alrode sheet using pandas
 def add_customer_names_column():
     alrode_sheet = work_book["Alrode"]
@@ -222,6 +128,20 @@ def cleanup_workbook():
                 rows_to_delete.append(i)
         for row_index in reversed(rows_to_delete):
             alrode_sheet.delete_rows(row_index)
+
+# Remove rows in "Alrode" sheet where "Product Names" column is null or empty
+for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
+        if col[0] == "Product Names":
+            product_names_column = col
+            break
+    product_names_column = None  
+    rows_to_delete_again = []
+    for x, product in enumerate(product_names_column[1:], start = 2):
+        if product is None or product == "":
+            rows_to_delete_again.append(x)
+
+    for row_index in reversed(rows_to_delete_again):
+        alrode_sheet.delete_rows(row_index)
 
 # Create sheets for each pivot table
 delivery_date_sheet = work_book.create_sheet("per delivery date")
