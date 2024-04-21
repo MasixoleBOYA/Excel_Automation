@@ -1,5 +1,6 @@
 import pandas as pd
 from openpyxl import Workbook, load_workbook
+from openpyxl.worksheet.pivot_table import PivotTable, TableCache
 
 from customer_codes_data import customer_codesNames_dictionary
 from product_codes_data import product_codes_dictionary
@@ -222,6 +223,38 @@ def cleanup_workbook():
         for row_index in reversed(rows_to_delete):
             alrode_sheet.delete_rows(row_index)
 
+# Create sheets for each pivot table
+delivery_date_sheet = work_book.create_sheet("per delivery date")
+cash_terms_sheet = work_book.create_sheet("cash terms")
+depot_product_sheet = work_book.create_sheet("per depot per product")
+
+def insert_blank_pivot_tables(work_book):
+    # Create a new sheet for each pivot table
+    delivery_date_sheet = work_book.create_sheet("per delivery date")
+    cash_terms_sheet = work_book.create_sheet("cash terms")
+    depot_product_sheet = work_book.create_sheet("per depot per product")
+    
+    # Get data from the "Alrode" sheet
+    alrode_sheet = work_book["Alrode"]
+    data_range = alrode_sheet.dimensions
+
+    # Create PivotTable objects
+    delivery_date_pivot = PivotTable()
+    cash_terms_pivot = PivotTable()
+    depot_product_pivot = PivotTable()
+
+    # Set the range for each PivotTable
+    delivery_date_pivot.range(ref=data_range)
+    cash_terms_pivot.range(ref=data_range)
+    depot_product_pivot.range(ref=data_range)
+
+    # Add PivotTables to corresponding sheets
+    delivery_date_sheet.add_pivot(delivery_date_pivot)
+    cash_terms_sheet.add_pivot(cash_terms_pivot)
+    depot_product_sheet.add_pivot(depot_product_pivot)
+
+
+
 print(f"\nWORKBOOK sheetnames:\n{work_book.sheetnames}")
 sheet_rename()
 appending_to_onesheet("Alrode")
@@ -229,6 +262,8 @@ appending_to_onesheet("Alrode")
 add_customer_names_column()
 add_product_names_column()
 cleanup_workbook()
+insert_blank_pivot_tables(work_book)
+
 
 print("cccccccccc DONE cccccccccccc")
 
