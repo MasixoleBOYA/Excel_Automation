@@ -1,6 +1,6 @@
 import pandas as pd
 from openpyxl import Workbook, load_workbook
-from openpyxl.worksheet.pivot_table import PivotTable, TableCache
+# from openpyxl.worksheet.pivot_table import PivotTable, TableCache
 
 from customer_codes_data import customer_codesNames_dictionary
 from product_codes_data import product_codes_dictionary
@@ -116,6 +116,7 @@ def cleanup_workbook():
     for sheet_name in sheets_to_delete:
         del work_book[sheet_name]
     alrode_sheet = work_book["Alrode"]
+
     customer_names_column = None
     for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
         if col[0] == "Customer Names":
@@ -129,19 +130,20 @@ def cleanup_workbook():
         for row_index in reversed(rows_to_delete):
             alrode_sheet.delete_rows(row_index)
 
-# Remove rows in "Alrode" sheet where "Product Names" column is null or empty
-for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
+    # Remove rows in "Alrode" sheet where "Product Names" column is null or empty
+    product_names_column = None
+    for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
         if col[0] == "Product Names":
             product_names_column = col
             break
-    product_names_column = None  
-    rows_to_delete_again = []
-    for x, product in enumerate(product_names_column[1:], start = 2):
-        if product is None or product == "":
-            rows_to_delete_again.append(x)
+    if product_names_column is not None:
+        rows_to_delete_again = []
+        for x, product in enumerate(product_names_column[1:], start = 2):
+            if product is None or product == "":
+                rows_to_delete_again.append(x)
 
-    for row_index in reversed(rows_to_delete_again):
-        alrode_sheet.delete_rows(row_index)
+        for row_index in reversed(rows_to_delete_again):
+            alrode_sheet.delete_rows(row_index)
 
 # Create sheets for each pivot table
 delivery_date_sheet = work_book.create_sheet("per delivery date")
@@ -182,9 +184,9 @@ appending_to_onesheet("Alrode")
 add_customer_names_column()
 add_product_names_column()
 cleanup_workbook()
-insert_blank_pivot_tables(work_book)
+# insert_blank_pivot_tables(work_book)
 
 
 print("cccccccccc DONE cccccccccccc")
 
-work_book.save('C:/Users/J1121857/Downloads/AAAAAAAAAAAA.xlsx')
+work_book.save('C:/Users/J1121857/Downloads/CCCCCCCC.xlsx')
