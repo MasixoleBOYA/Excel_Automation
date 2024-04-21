@@ -2,70 +2,7 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 
 from customer_codes_data import customer_codesNames_dictionary
-"""
-def add_customer_names_column():
-    alrode_sheet = work_book["Alrode"]
 
-    alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
-
-    # Convert 'Customer No.' column to numeric, coercing non-numeric values to NaN
-    alrode_df['Customer No.'] = pd.to_numeric(alrode_df["Customer No."], errors='coerce')
-
-    print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Customer No.'])}\n")
-    
-    # Drop rows with NaN values in 'Customer No.' column
-    alrode_df.dropna(subset=['Customer No.'], inplace=True)
-
-    # Convert 'Customer No.' column to integers
-    alrode_df['Customer No.'] = alrode_df['Customer No.'].astype(int)
-
-    # Initialize an empty list to store customer names
-    customer_names = []
-
-    # Iterate over the rows of the DataFrame
-    for index, row in alrode_df.iterrows():
-        # Get the customer number from the current row
-        customer_no = row['Customer No.']
-        
-        # Initialize a variable to store the customer name
-        customer_name = ""
-        
-        # Iterate over the items in the dictionary
-        for key, value in customer_codesNames_dictionary.items():
-            # Check if the current key matches the customer number
-            if key == customer_no:
-                # Assign the corresponding customer name
-                customer_name = value
-                # Print the customer name for verification
-                print(f"Customer No. {customer_no} - Customer Name: {customer_name}")
-                # Exit the loop since we found the matching customer name
-                break
-        
-        # Append the customer name to the list
-        customer_names.append(customer_name)
-
-    print(f"CUSTOMERS : {customer_names}")
-    # Add the list of customer names as a new column in the DataFrame
-    alrode_df['Customer Names'] = customer_names
-    
-    print(f"NEW CUSTOMER NAMES COLUMN: \n {alrode_df['Customer Names']}")
-"""
-'''
-Customer No. 244642 - Customer Name: GULFSTREAM
-Customer No. 244642 - Customer Name: GULFSTREAM
-Customer No. 244642 - Customer Name: GULFSTREAM
-Customer No. 244642 - Customer Name: GULFSTREAM
-Customer No. 244642 - Customer Name: GULFSTREAM
-Customer No. 244642 - Customer Name: GULFSTREAM
-CUSTOMERS : ['', '', '', '', '', '', '', '', '', '', '', '', '', '', 'OKSANA PETROLEUM', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', 'OKSANA PETROLEUM', '', '', 'GULFSTREAM', 'GULFSTREAM', '', '', '', '', '', '', 'VIRTUAL PETROLEUM', 'VIRTUAL PETROLEUM', '', '', '', '', '', '', '', '', '', 'MASS PETROLEUM ', 'SOURCE PETROLEUM', '', '', '', '', '', '', '', '', '', '', 
-'', '', '', '', '', '', 'OPEVIA', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', '', 'SOURCE PETROLEUM', '', '', 'OKSANA PETROLEUM', 'OKSANA PETROLEUM', '', '', '', '', '', 'GULFSTREAM', '', '', '', '', '', '', '', '', '', '', 'MASS PETROLEUM ', 'OKSANA PETROLEUM', '', '', '', 'MASS PETROLEUM ', '', '', '', 
-'', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 
-'', '', '', '', '', '', '', '', 'MASS PETROLEUM ', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'GULFSTREAM', '', '', '', 'MASS PETROLEUM ', 'F2K PETROLEUM', '', '', '', '', '', 'F2K PETROLEUM', '', 'GULFSTREAM', '', '', 'N1 PETROLEUM', 'OKSANA PETROLEUM', '', 
-'', '', 'MASS PETROLEUM ', 'OPEVIA', 'K AND A VISIONARY SOLUTIONS', '', '', '', '', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', '', '', 'SOURCE PETROLEUM', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', 
-'', '', '', '', '', 'OKSANA PETROLEUM', '', '', 'SOURCE PETROLEUM', '', '', '', '', '', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', '', '', 'GULFSTREAM', 'GULFSTREAM', 'GULFSTREAM', 'OKSANA PETROLEUM', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 
-'', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'ELEGANT FUEL', 'ELEGANT FUEL', '', '', '', '', '', '', '', '', '', '', 'ELEGANT FUEL', 'ELEGANT FUEL', '', '', '', '', '', '', 'ELEGANT FUEL', 
-'ELEGANT FUEL', '', '', 
-'''
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
@@ -120,7 +57,7 @@ def add_customer_names_column():
         customer_no = row['Customer No.']
         
         # Initialize a variable to store the customer name
-        customer_name = ""
+        customer_name = None  # Change empty string to None
         
         # Iterate over the items in the dictionary
         for key, value in customer_codesNames_dictionary.items():
@@ -141,6 +78,7 @@ def add_customer_names_column():
     alrode_df['Customer Names'] = customer_names
     
     print(f"NEW CUSTOMER NAMES COLUMN: \n {alrode_df['Customer Names']}")
+
 
 
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
