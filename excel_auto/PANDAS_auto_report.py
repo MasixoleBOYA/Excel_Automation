@@ -156,6 +156,8 @@ def add_customer_names_column():
             if key == customer_no:
                 # Assign the corresponding customer name
                 customer_name = value
+                # Print the customer name for verification
+                print(f"Customer No. {customer_no} - Customer Name: {customer_name}")
                 # Exit the loop since we found the matching customer name
                 break
         
