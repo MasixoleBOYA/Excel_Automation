@@ -201,12 +201,34 @@ def add_product_names_column():
     for index, value in enumerate(product_names, start=2):
         alrode_sheet.cell(row=index, column=4, value=value)
 
+
+# Additional functionality: Delete other sheets except "Alrode" sheet and remove rows with empty "Customer Names" column
+def cleanup_workbook():
+    sheets_to_keep = ["Alrode"]
+    sheets_to_delete = [sheet for sheet in work_book.sheetnames if sheet not in sheets_to_keep]
+    for sheet_name in sheets_to_delete:
+        del work_book[sheet_name]
+    alrode_sheet = work_book["Alrode"]
+    customer_names_column = None
+    for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
+        if col[0] == "Customer Names":
+            customer_names_column = col
+            break
+    if customer_names_column is not None:
+        rows_to_delete = []
+        for i, cell_value in enumerate(customer_names_column[1:], start=2):
+            if cell_value is None or cell_value == "":
+                rows_to_delete.append(i)
+        for row_index in reversed(rows_to_delete):
+            alrode_sheet.delete_rows(row_index)
+
 print(f"\nWORKBOOK sheetnames:\n{work_book.sheetnames}")
 sheet_rename()
 appending_to_onesheet("Alrode")
 
 add_customer_names_column()
 add_product_names_column()
+cleanup_workbook()
 
 print("cccccccccc DONE cccccccccccc")
 
