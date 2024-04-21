@@ -74,9 +74,6 @@ def add_customer_names_column():
     for index, row in alrode_df.iterrows():
         alrode_sheet.append(row)
 
-    # Save the workbook
-    work_book.save('C:/Users/J1121857/Downloads/AAAAAAAAAAAA.xlsx')
-
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
 def add_product_names_column():
     alrode_sheet = work_book["Alrode"]
