@@ -3,22 +3,7 @@ from openpyxl import Workbook, load_workbook
 
 from customer_codes_data import customer_codesNames_dictionary
 
-'''
-product_codes_dictionary = {
-	23119: 'Additised ULP93',	
-    23130:'Excellium Unleaded 95',	
-    23131:	'Excellium Diesel 50',	
-    22735:'ULP 93',	
-    22736:'ULP 95',	
-    22738:'LRP 93',	
-    22750:'LRP 95',	
-    22753:'D50',
-    22754:'D500',	
-    30682:'HFO 150CST',	
-    30687:'Light Cycle Oil'
 
-}
-'''
 
 work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
@@ -100,20 +85,47 @@ def add_customer_names_column():
 # PART 4: Add "Product Names" column to Alrode sheet using pandas
 def add_product_names_column():
     alrode_sheet = work_book["Alrode"]
-    product_codes_workbook = product_codes_workbook['Product Code']
-
+    
     alrode_df = pd.DataFrame(alrode_sheet.values, columns=[col[0].value for col in alrode_sheet.iter_cols()])
 
-    # Looking up for product names based on the "Product" column
-    alrode_df["Product Names"] = alrode_df["Product"].map(product_codes_workbook.set_index("Product code")["Product name"])
+    # Convert 'Product' column to numeric, coercing non-numeric values to NaN
+    alrode_df['Product'] = pd.to_numeric(alrode_df["Product"], errors='coerce')
 
-    alrode_df["Product Names"].fillna("", inplace=True)
+    print(f"\nXXXX TYPES XXXXX: {type(alrode_df['Product'])}\n")
 
-    # Update the Alrode sheet 
-    alrode_sheet.clear()
-    alrode_sheet.append(list(alrode_df.columns))
+    # Drop rows with NaN values in 'Product' column
+    alrode_df.dropna(subset=['Product'], inplace=True)
+
+    # Convert 'Product' column to integers
+    alrode_df['Product'] = alrode_df['Product'].astype(int)
+
+    # Initialize an empty list to store product names
+    product_names = []
+
+    # Iterate over the rows of the DataFrame
+    for index, row in alrode_df.iterrows():
+        # Get the product code from the current row
+        product_code = row['Product']
+        
+        # Initialize a variable to store the product name
+        product_name = None
+        
+        # Look up the product name in the dictionary
+        product_name = product_codes_dictionary.get(product_code)
+        
+        # Append the product name to the list
+        product_names.append(product_name)
+
+    print(f"PRODUCTS : {product_names}")
+    # Add the list of product names as a new column in the DataFrame
+    alrode_df['Product Names'] = product_names
+    
+    print(f"NEW PRODUCT NAMES COLUMN: \n {alrode_df['Product Names']}")
+
+    # Append the updated DataFrame to the Alrode sheet 
     for row in alrode_df.values:
         alrode_sheet.append(list(row))
+
 
 print(f"\nWORKBOOK sheetnames:\n{work_book.sheetnames}")
 sheet_rename()
