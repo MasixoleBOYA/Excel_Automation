@@ -144,11 +144,25 @@ def cleanup_workbook():
 
         for row_index in reversed(rows_to_delete_again):
             alrode_sheet.delete_rows(row_index)
+#making sure to only have ULP95 and D50
+product_names_column = None
+    for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
+        if col[0] == "Product Names":
+            product_names_column = col
+            break
+    if product_names_column is not None:
+        for i, cell_value in enumerate(product_names_column[1:], start=2):
+            if cell_value == "Excellium Diesel 50":
+                cell = alrode_sheet.cell(row=i, column=product_names_column[0].column)
+                cell.value = "D50"
+            elif cell_value == "Excellium Unleaded 95":
+                cell = alrode_sheet.cell(row=i, column=product_names_column[0].column)
+                cell.value = "ULP 95"
 
 # Create sheets for each pivot table
-delivery_date_sheet = work_book.create_sheet("per delivery date")
-cash_terms_sheet = work_book.create_sheet("cash terms")
-depot_product_sheet = work_book.create_sheet("per depot per product")
+work_book.create_sheet("per delivery date")
+work_book.create_sheet("cash terms")
+work_book.create_sheet("per depot per product")
 
 def insert_blank_pivot_tables(work_book):
     # Create a new sheet for each pivot table
