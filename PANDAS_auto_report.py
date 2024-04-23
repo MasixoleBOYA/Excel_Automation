@@ -2,7 +2,7 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 # from openpyxl.worksheet.pivot_table import PivotTable, TableCache
 
-from customer_codes_data import customer_codesNames_dictionary
+from excel_auto.customer_codes_data import customer_codesNames_dictionary
 from product_codes_data import product_codes_dictionary
 from customer_cash_OR_terms import customer_codesTerms_dictionary
 

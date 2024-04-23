@@ -2,7 +2,7 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 # from openpyxl.worksheet.pivot_table import PivotTable, TableCache
 
-from customer_codes_data import customer_codesNames_dictionary
+from excel_auto.customer_codes_data import customer_codesNames_dictionary
 from product_codes_data import product_codes_dictionary
 
 
@@ -11,8 +11,8 @@ work_book = load_workbook('C:/Users/J1121857/Downloads/GANTRY_RAW_data.xlsx')
 product_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Copy of Reseller customer list 29 Mar 22.XLSX')  # Replace with the actual path
 # customer_codes_workbook = load_workbook('C:/Users/J1121857/Downloads/Reseller ship-to list.xlsx')  # Replace with the actual path
 
-depots = ["Alrode", "Bethlehem", "Cape Town", "East London", "Island View", "Klerksdorp", "Ladysmith", "Mossel Bay",
-          "Nelspruit", "Port Elizabeth", "Sasolburg", "Tarlton", "Waltloo", "Witbank"]
+# depots = ["Alrode", "Bethlehem", "Cape Town", "East London", "Island View", "Klerksdorp", "Ladysmith", "Mossel Bay",
+        #   "Nelspruit", "Port Elizabeth", "Sasolburg", "Tarlton", "Waltloo", "Witbank"]
 
 # PART 1: renames the "Gantry AP" column for all sheets
 def sheet_rename() -> None:
@@ -144,8 +144,10 @@ def cleanup_workbook():
 
         for row_index in reversed(rows_to_delete_again):
             alrode_sheet.delete_rows(row_index)
-#making sure to only have ULP95 and D50
-product_names_column = None
+
+
+    #making sure to only have ULP95 and D50
+    product_names_column = None
     for col in alrode_sheet.iter_cols(min_col=1, max_col=alrode_sheet.max_column, values_only=True):
         if col[0] == "Product Names":
             product_names_column = col
@@ -160,34 +162,12 @@ product_names_column = None
                 cell.value = "ULP 95"
 
 # Create sheets for each pivot table
+
 work_book.create_sheet("per delivery date")
 work_book.create_sheet("cash terms")
 work_book.create_sheet("per depot per product")
 
-def insert_blank_pivot_tables(work_book):
-    # Create a new sheet for each pivot table
-    delivery_date_sheet = work_book.create_sheet("per delivery date")
-    cash_terms_sheet = work_book.create_sheet("cash terms")
-    depot_product_sheet = work_book.create_sheet("per depot per product")
-    
-    # Get data from the "Alrode" sheet
-    alrode_sheet = work_book["Alrode"]
-    data_range = alrode_sheet.dimensions
 
-    # Create PivotTable objects
-    delivery_date_pivot = PivotTable()
-    cash_terms_pivot = PivotTable()
-    depot_product_pivot = PivotTable()
-
-    # Set the range for each PivotTable
-    delivery_date_pivot.range(ref=data_range)
-    cash_terms_pivot.range(ref=data_range)
-    depot_product_pivot.range(ref=data_range)
-
-    # Add PivotTables to corresponding sheets
-    delivery_date_sheet.add_pivot(delivery_date_pivot)
-    cash_terms_sheet.add_pivot(cash_terms_pivot)
-    depot_product_sheet.add_pivot(depot_product_pivot)
 
 
 
@@ -195,9 +175,9 @@ print(f"\nWORKBOOK sheetnames:\n{work_book.sheetnames}")
 sheet_rename()
 appending_to_onesheet("Alrode")
 
-add_customer_names_column()
-add_product_names_column()
-cleanup_workbook()
+# add_customer_names_column()
+# add_product_names_column()
+# cleanup_workbook()
 # insert_blank_pivot_tables(work_book)
 
 
